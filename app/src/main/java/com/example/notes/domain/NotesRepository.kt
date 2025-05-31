@@ -6,15 +6,15 @@ interface NotesRepository {
 
     fun addNote(note: Note)
 
-    fun deleteNote(noteInt: Int)
+    fun deleteNote(noteId: Int)
 
     fun editeNote(note: Note)
 
     fun getAllNotes(): Flow<List<Note>>
 
-    fun getNote (noteInt: Int): Note
+    fun getNote (noteId: Int): Note
 
-    fun searchNotes(queue: String): Flow<List<Note>>
+    fun searchNotes(query: String): Flow<List<Note>>
 
-    fun switchPinnedStatus(noteInt: Int)
+    fun switchPinnedStatus(noteId: Int)
 }
