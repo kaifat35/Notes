@@ -1,5 +1,6 @@
 package com.example.notes.data
 
+
 import android.content.Context
 import com.example.notes.domain.Note
 import com.example.notes.domain.NotesRepository
@@ -7,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class NotesRepositoryImpl private constructor(context: Context) : NotesRepository {
+
     private val notesDatabase: NotesDatabase = NotesDatabase.getInstance(context)
     private val notesDao: NotesDao = notesDatabase.notesDao()
 
@@ -49,12 +51,17 @@ class NotesRepositoryImpl private constructor(context: Context) : NotesRepositor
         private val LOCK = Any()
         private var instance: NotesRepositoryImpl? = null
 
-        fun getInstance(content: Context): NotesRepositoryImpl {
+        fun getInstance(context: Context): NotesRepositoryImpl {
 
             instance?.let { return it }
 
-            return NotesRepositoryImpl(content).also {
-                instance = it
+            synchronized(LOCK) {
+
+                instance?.let { return it }
+
+                return NotesRepositoryImpl(context).also {
+                    instance = it
+                }
             }
         }
     }

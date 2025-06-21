@@ -1,8 +1,9 @@
 package com.example.notes.presentation.screens.notes
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.notes.data.TestNotesRepositoryImpl
+import com.example.notes.data.NotesRepositoryImpl
 import com.example.notes.domain.GetAllNotesUseCase
 import com.example.notes.domain.Note
 import com.example.notes.domain.SearchNoteUseCase
@@ -17,9 +18,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class NotesViewModel: ViewModel() {
+class NotesViewModel(context: Context): ViewModel() {
 
-    private val repository = TestNotesRepositoryImpl
+    private val repository = NotesRepositoryImpl.getInstance(context)
 
     private val getAllNotesUseCase = GetAllNotesUseCase(repository)
     private val searchNotesUseCase = SearchNoteUseCase(repository)

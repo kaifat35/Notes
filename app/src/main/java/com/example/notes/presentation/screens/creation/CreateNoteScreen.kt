@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.notes.presentation.screens.creation
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,13 +35,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.notes.presentation.utils.DateFormatter
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateNoteScreen (
+fun CreateNoteScreen(
     modifier: Modifier = Modifier,
-    viewModel: CreateViewModel = viewModel(),
+    context: Context = LocalContext.current.applicationContext,
+    viewModel: CreateViewModel = viewModel {
+        CreateViewModel(context)
+    },
     onFinished: () -> Unit
-){
+) {
     val state = viewModel.state.collectAsState()
     val currentState = state.value
 
@@ -63,7 +69,7 @@ fun CreateNoteScreen (
                             Icon(
                                 modifier = Modifier
                                     .padding(start = 16.dp, end = 8.dp)
-                                    .clickable{
+                                    .clickable {
                                         viewModel.processCommand(CreateNoteCommand.Back)
                                     },
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -72,13 +78,14 @@ fun CreateNoteScreen (
                         }
                     )
                 }
-            ) {innerPadding->
-                Column (
+            ) { innerPadding ->
+                Column(
                     modifier = Modifier.padding(innerPadding)
-                ){
+                ) {
                     TextField(
-                        modifier = Modifier.fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
                         value = currentState.title,
                         onValueChange = {
                             viewModel.processCommand(CreateNoteCommand.InputTitle(it))
@@ -157,8 +164,9 @@ fun CreateNoteScreen (
                 }
             }
         }
+
         CreateNoteState.Finished -> {
-            LaunchedEffect(key1 =  Unit) {
+            LaunchedEffect(key1 = Unit) {
                 onFinished()
             }
         }

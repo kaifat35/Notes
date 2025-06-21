@@ -20,7 +20,7 @@ fun NavGraph() {
         composable(Screen.Notes.route) {
             NotesScreen(
                 onNoteClick = {
-                    navController.navigate(Screen.EditNote.createRoute(id))
+                    navController.navigate(Screen.EditNote.createRoute(it.id))
                 },
                 onAddNoteClick = {
                     navController.navigate(Screen.CreateNote.route)
