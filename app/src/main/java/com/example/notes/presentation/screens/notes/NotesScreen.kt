@@ -1,6 +1,5 @@
 package com.example.notes.presentation.screens.notes
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
@@ -32,13 +31,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.notes.R
 import com.example.notes.domain.Note
 import com.example.notes.presentation.ui.theme.OtherNotesColor
@@ -48,13 +46,10 @@ import com.example.notes.presentation.utils.DateFormatter
 @Composable
 fun NotesScreen(
     modifier: Modifier = Modifier,
-    context: Context = LocalContext.current.applicationContext,
-    viewModel: NotesViewModel = viewModel{
-        NotesViewModel(context)
-    },
+    viewModel: NotesViewModel = hiltViewModel(),
     onNoteClick: (Note) -> Unit,
     onAddNoteClick: () -> Unit
-){
+) {
     val state by viewModel.state.collectAsState()
     Scaffold(
         modifier = modifier,
@@ -71,19 +66,20 @@ fun NotesScreen(
                 )
             }
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         LazyColumn(
             contentPadding = innerPadding
         ) {
-            item{
+            item {
                 Title(
                     modifier = Modifier.padding(horizontal = 24.dp),
-                    text = "All Notes")
+                    text = "All Notes"
+                )
             }
-            item{
+            item {
                 Spacer(modifier = Modifier.height(16.dp))
             }
-            item{
+            item {
                 SearchBar(
                     modifier = Modifier.padding(horizontal = 24.dp),
                     query = state.query,
@@ -92,27 +88,28 @@ fun NotesScreen(
                     }
                 )
             }
-            item{
+            item {
                 Spacer(modifier = Modifier.height(24.dp))
             }
-            item{
+            item {
                 Subtitle(
                     modifier = Modifier.padding(horizontal = 24.dp),
-                    text = "Pinned")
+                    text = "Pinned"
+                )
             }
-            item{
+            item {
                 Spacer(modifier = Modifier.height(16.dp))
             }
-            item{
+            item {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 24.dp)
-                ){
+                ) {
                     itemsIndexed(
                         items = state.pinnedNotes,
-                        key = { _, note -> note.id}
-                    ){index, note ->
+                        key = { _, note -> note.id }
+                    ) { index, note ->
                         NoteCard(
                             modifier = Modifier.widthIn(160.dp),
                             note = note,
@@ -125,23 +122,25 @@ fun NotesScreen(
                     }
                 }
             }
-            item{
+            item {
                 Spacer(modifier = Modifier.height(24.dp))
             }
-            item{
+            item {
                 Subtitle(
                     modifier = Modifier.padding(horizontal = 24.dp),
-                    text = "Others")
+                    text = "Others"
+                )
             }
-            item{
+            item {
                 Spacer(modifier = Modifier.height(16.dp))
             }
-            itemsIndexed (
+            itemsIndexed(
                 items = state.otherNotes,
                 key = { _, note -> note.id }
-            ){index, note ->
+            ) { index, note ->
                 NoteCard(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 24.dp),
                     note = note,
                     onNoteClick = onNoteClick,
@@ -160,7 +159,7 @@ fun NotesScreen(
 private fun Title(
     modifier: Modifier = Modifier,
     text: String
-){
+) {
     Text(
         modifier = modifier,
         text = text,
@@ -174,10 +173,11 @@ private fun Title(
 private fun SearchBar(
     modifier: Modifier = Modifier,
     query: String,
-    onQueryChange:(String) -> Unit
-){
+    onQueryChange: (String) -> Unit
+) {
     TextField(
-        modifier= modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .border(
                 width = 1.dp,
@@ -214,7 +214,7 @@ private fun SearchBar(
 private fun Subtitle(
     modifier: Modifier = Modifier,
     text: String
-){
+) {
     Text(
         modifier = modifier,
         text = text,
@@ -222,8 +222,7 @@ private fun Subtitle(
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
 
-    )
-
+        )
 }
 
 @Composable
@@ -234,8 +233,8 @@ fun NoteCard(
     onNoteClick: (Note) -> Unit,
     onLongClick: (Note) -> Unit
 
-){
-    Column (
+) {
+    Column(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .background(backgroundColor)
@@ -248,7 +247,7 @@ fun NoteCard(
                 }
             )
             .padding(horizontal = 16.dp)
-    ){
+    ) {
         Text(
             text = note.title,
             fontSize = 14.sp,

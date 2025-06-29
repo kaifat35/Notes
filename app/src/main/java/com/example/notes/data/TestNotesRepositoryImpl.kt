@@ -11,16 +11,16 @@ import kotlinx.coroutines.flow.update
 object TestNotesRepositoryImpl : NotesRepository {
 
     private val testData = mutableListOf<Note>().apply {
-        repeat(10){
-            add(Note(it,"Title $it", "Content $it", System.currentTimeMillis(), false))
+        repeat(10) {
+            add(Note(it, "Title $it", "Content $it", System.currentTimeMillis(), false))
         }
     }
 
 
-    private val notesListFlow = MutableStateFlow <List<Note>>(testData)
+    private val notesListFlow = MutableStateFlow<List<Note>>(testData)
 
     override suspend fun deleteNote(noteId: Int) {
-        notesListFlow.update {oldList ->
+        notesListFlow.update { oldList ->
             oldList.toMutableList().apply {
                 removeIf {
                     it.id == noteId
@@ -30,11 +30,11 @@ object TestNotesRepositoryImpl : NotesRepository {
     }
 
     override suspend fun editeNote(note: Note) {
-        notesListFlow.update {oldList ->
-            oldList.map{
-                if (it.id == note.id){
+        notesListFlow.update { oldList ->
+            oldList.map {
+                if (it.id == note.id) {
                     note
-                }else{
+                } else {
                     it
                 }
             }
@@ -47,10 +47,10 @@ object TestNotesRepositoryImpl : NotesRepository {
         isPinned: Boolean,
         updateAt: Long
     ) {
-        notesListFlow.update {oldList->
+        notesListFlow.update { oldList ->
             val note = Note(
                 id = oldList.size,
-                title= title,
+                title = title,
                 content = content,
                 updatedAt = updateAt,
                 isPinned = isPinned
@@ -68,20 +68,20 @@ object TestNotesRepositoryImpl : NotesRepository {
     }
 
     override fun searchNotes(query: String): Flow<List<Note>> {
-       return notesListFlow.map { currentList ->
-           currentList.filter {
-               it.title.contains(query) || it.content.contains(query)
-           }
+        return notesListFlow.map { currentList ->
+            currentList.filter {
+                it.title.contains(query) || it.content.contains(query)
+            }
 
-       }
+        }
     }
 
     override suspend fun switchPinnedStatus(noteId: Int) {
-        notesListFlow.update {oldList ->
-            oldList.map{
-                if (it.id == noteId){
+        notesListFlow.update { oldList ->
+            oldList.map {
+                if (it.id == noteId) {
                     it.copy(isPinned = !it.isPinned)
-                }else{
+                } else {
                     it
                 }
             }

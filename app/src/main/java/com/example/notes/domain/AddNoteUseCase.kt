@@ -1,13 +1,15 @@
 package com.example.notes.domain
 
-class AddNoteUseCase (
-    private val repository: NotesRepository
-){
+import javax.inject.Inject
 
-    suspend operator  fun invoke(
+class AddNoteUseCase @Inject constructor(
+    private val repository: NotesRepository
+) {
+
+    suspend operator fun invoke(
         title: String,
         content: String
-    ){
+    ) {
         repository.addNote(
             title = title,
             content = content,

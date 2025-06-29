@@ -15,19 +15,19 @@ object DateFormatter {
         return formatter.format(System.currentTimeMillis())
     }
 
-    fun formatDateToString(timestamp: Long): String{
+    fun formatDateToString(timestamp: Long): String {
 
         val now = System.currentTimeMillis()
         val diff = now - timestamp
 
-        return when{
+        return when {
             diff < millisInHour -> "Just now"
             diff < millisInDay -> {
                 val hours = TimeUnit.MILLISECONDS.toHours(diff)
                 "$hours h ago"
             }
 
-            else ->{
+            else -> {
                 formatter.format(timestamp)
             }
         }
